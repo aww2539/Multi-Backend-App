@@ -1,0 +1,13 @@
+# frontend/FrontendDockerfile
+
+FROM node:18-alpine
+
+WORKDIR /workspace
+
+COPY ./frontend /workspace
+
+RUN npm ci
+
+EXPOSE 3000
+
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]

@@ -1,0 +1,15 @@
+# .devcontainer/backend/flask/FlaskDockerfile
+
+FROM python:3.12-alpine
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /workspace
+
+COPY ./backend/flask /workspace
+
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]

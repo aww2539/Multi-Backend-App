@@ -1,0 +1,14 @@
+# .devcontainer/backend/phoenix/PhoenixDockerfile
+
+FROM elixir:1.17-alpine
+
+WORKDIR /workspace
+
+COPY ./backend/phoenix /workspace
+
+RUN mix local.hex --force && mix local.rebar --force
+RUN mix deps.get
+
+EXPOSE 4000
+
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Gradle startup script for UN*X
+
+# Find the current script's directory, to be able to run this script from any location
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+"$DIR/gradle/wrapper/gradle-wrapper" "$@"

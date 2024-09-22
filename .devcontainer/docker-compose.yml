@@ -1,0 +1,105 @@
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: .devcontainer/frontend/FrontendDockerfile
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./.universal.env
+      - ./frontend/.frontend.env
+    volumes:
+      - type: bind
+        source: ../frontend
+        target: /workspace
+  
+  spring:
+    build:
+      context: ..
+      dockerfile: .devcontainer/backend/dockerfiles/SpringDockerfile
+    ports:
+      - '8080:8080'
+    env_file:
+      - ./.universal.env
+      - ./backend/environment/.spring.env
+    volumes:
+      - type: bind
+        source: ../backend/phoenix
+        target: /phoenix
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+
+  django:
+    build:
+      context: ..
+      dockerfile: .devcontainer/backend/dockerfiles/DjangoDockerfile
+    ports:
+      - '8000:8000'
+    env_file:
+      - ./.universal.env
+      - ./backend/environment/.django.env
+    volumes:
+      - type: bind
+        source: ../backend/django
+        target: /workspace
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+
+  flask:
+    build:
+      context: ..
+      dockerfile: .devcontainer/backend/dockerfiles/FlaskDockerfile
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./.universal.env
+      - ./backend/environment/.flask.env
+    volumes:
+      - type: bind
+        source: ../backend/flask
+        target: /workspace
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+
+  phoenix:
+    build:
+      context: ..
+      dockerfile: .devcontainer/backend/dockerfiles/PhoenixDockerfile
+    ports:
+      - '4000:4000'
+    env_file:
+      - ./.universal.env
+      - ./backend/environment/.phoenix.env
+    volumes:
+      - type: bind
+        source: ../backend/phoenix
+        target: /workspace
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+
+  database:
+    image: postgres:14-alpine
+    ports:
+      - '5432:5432'
+    env_file:
+      - ./.universal.env
+      - ./database/.database.env
+    volumes:
+      - type: bind
+        source: ../database
+        target: /database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d multi_backend_app_db"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    

@@ -1,0 +1,17 @@
+# .devcontainer/backend/spring-boot/SpringDockerfile
+
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /workspace
+
+COPY ./backend/spring /workspace
+
+RUN gradle --version || echo "Gradle not installed, using wrapper"
+
+RUN chmod +x ./gradlew
+
+RUN [ ! -d "src/main/java" ] && ./gradlew init || echo "Project already initialized"
+
+EXPOSE 8080
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
